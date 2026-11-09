@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Бесплатный онлайн-конструктор схемы котельной: котлы, бойлеры, гидрострелки, насосные группы, трубы по цветам, номера узлов для наклеек и спецификация. 8 готовых шаблонов.">
+<meta property="og:title" content="Конструктор котельной">
+<meta property="og:description" content="Соберите схему котельной из готовых узлов и сохраните картинку для паспорта котельной.">
+<meta property="og:url" content="https://kotelnaya.online/">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2036%2036%22%3E%3Crect%20x%3D%221%22%20y%3D%221%22%20width%3D%2234%22%20height%3D%2234%22%20rx%3D%228%22%20fill%3D%22%2317222A%22/%3E%3Cpath%20d%3D%22M9%2026V12h6v14M21%2026V10h6v16%22%20stroke%3D%22%23EDF1F2%22%20stroke-width%3D%222.5%22%20fill%3D%22none%22/%3E%3Cpath%20d%3D%22M15%2015h6M15%2022h6%22%20stroke%3D%22%23E0453A%22%20stroke-width%3D%222.5%22/%3E%3C/svg%3E">
+<style>html{-webkit-text-size-adjust:100%}body{margin:0}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
+<style>
+/* Layout: инструментальная панель сверху, слева библиотека узлов, в центре лист чертежа (как формат А3 со штампом), справа свойства и спецификация. */
+:root{
+  --bg:#EDF1F2; --panel:#FFFFFF; --line:#D3DBDE; --fg:#17222A; --muted:#566872;
+<style>
+/* Layout: инструментальная панель сверху, слева библиотека узлов, в центре лист чертежа (как формат А3 со штампом), справа свойства и спецификация. */
+:root{
+  --bg:#EDF1F2; --panel:#FFFFFF; --line:#D3DBDE; --fg:#17222A; --muted:#566872;
+  --accent:#A8731A; --accent-soft:#F4E7CF; --accent-fg:#FFFFFF; --sel:#0B7A84;
+  --sheet:#FFFFFF; --sheet-ink:#1D2733; --sheet-grid:#E6ECEF;
+  --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --f-display:"Unbounded","Golos Text",system-ui,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10161A; --panel:#172026; --line:#2A3740; --fg:#E2E9EC; --muted:#93A4AD;
+  --accent:#D8A444; --accent-soft:#3A2F1C; --accent-fg:#1A1206; --sel:#41C2CA; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10161A; --panel:#172026; --line:#2A3740; --fg:#E2E9EC; --muted:#93A4AD;
+  --accent:#D8A444; --accent-soft:#3A2F1C; --accent-fg:#1A1206; --sel:#41C2CA; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:14px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 32px}
+h1,h2,h3{margin:0;text-wrap:balance}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--sel);outline-offset:2px}
+
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;margin-bottom:12px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand h1{font-family:var(--f-display);font-size:19px;letter-spacing:.01em}
+.brand small{display:block;color:var(--muted);font-size:12.5px}
+.logo{width:36px;height:36px;flex:none}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--panel);border:1px solid var(--line);
+  border-radius:10px;padding:8px;margin-bottom:12px}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:transparent;padding:7px 12px;font-weight:500}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.btn{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:7px 12px;font-weight:500}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.btn.warn{border-color:#C0392B;color:#C0392B}
+.pipes{display:flex;flex-wrap:wrap;gap:6px}
+.pipe-chip{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 10px 5px 6px;font-size:13px}
+.pipe-chip i{width:22px;height:6px;border-radius:3px;display:block}
+.pipe-chip[aria-pressed="true"]{border-color:var(--fg);box-shadow:inset 0 0 0 1px var(--fg);font-weight:600}
+.spacer{flex:1}
+.hint{font-size:12.5px;color:var(--muted)}
+
+.app{display:grid;grid-template-columns:230px minmax(0,1fr) 300px;gap:12px;align-items:start}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;min-width:0}
+.panel h2{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;margin-bottom:8px}
+.lib{max-height:calc(100vh - 150px);overflow:auto;position:sticky;top:8px}
+.lib-group{margin-bottom:12px}
+.lib-group h3{font-size:12px;color:var(--muted);font-weight:500;margin:6px 0}
+.lib-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.tile{min-width:0;overflow-wrap:anywhere;hyphens:auto;display:flex;flex-direction:column;align-items:center;gap:4px;border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:6px 4px;font-size:11.5px;line-height:1.2;text-align:center;min-height:84px}
+.tile svg{width:46px;height:42px}
+.tile[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.tile:hover{border-color:var(--muted)}
+
+.stage{min-width:0}
+.canvas-wrap{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:auto;max-height:calc(100vh - 150px)}
+#sheet{display:block;touch-action:pan-x pan-y pinch-zoom;user-select:none;-webkit-user-select:none}
+#sheet .it,#sheet .pp{touch-action:none;cursor:move}
+#sheet.mode-pipe,#sheet.mode-place{cursor:crosshair}
+#sheet.mode-pipe .it{cursor:crosshair}
+.stage-foot{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.zoom{display:flex;gap:4px;align-items:center}
+.zoom span{min-width:44px;text-align:center;font-variant-numeric:tabular-nums;color:var(--muted)}
+
+.side{display:flex;flex-direction:column;gap:12px}
+.field{display:flex;flex-direction:column;gap:3px;margin-bottom:8px}
+.field label{font-size:12px;color:var(--muted)}
+.field input,.field select,.field textarea{border:1px solid var(--line);border-radius:7px;background:var(--bg);padding:6px 8px;width:100%;min-width:0}
+.row{display:flex;gap:6px;flex-wrap:wrap}
+.empty{color:var(--muted);font-size:13px}
+.spec{width:100%;border-collapse:collapse;font-size:13px}
+.spec td{border-top:1px solid var(--line);padding:4px 2px;vertical-align:middle}
+.spec td:first-child{width:34px}
+.num{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#FFD400;color:#111;font-weight:700;font-size:12px;font-variant-numeric:tabular-nums;border:1.5px solid #111}
+.spec input{border:0;background:transparent;width:100%;padding:2px 0}
+.spec input:focus{background:var(--bg)}
+.spec .sm{color:var(--muted)}
+
+.modal{position:fixed;inset:0;background:rgba(10,15,18,.55);display:grid;place-items:center;z-index:50;
+  padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.modal-box{background:var(--panel);color:var(--fg);border-radius:12px;max-width:min(1000px,100%);max-height:100%;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.modal-box img{border:1px solid var(--line);border-radius:6px;background:#fff}
+.modal-box textarea{width:100%;min-height:180px;border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:8px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:8px 14px;border-radius:8px;z-index:60;font-size:13px}
+
+@media (max-width:1100px){.app{grid-template-columns:180px minmax(0,1fr)}.side{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}}
+@media (max-width:720px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .lib{position:static;max-height:none;order:2}
+  .stage{order:1}.side{order:3}
+  .lib-grid{grid-template-columns:repeat(auto-fill,minmax(78px,1fr))}
+  .canvas-wrap{max-height:65vh}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.tpl{border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:8px;text-align:left;display:flex;flex-direction:column;gap:4px;min-width:0}
+.tpl:hover{border-color:var(--accent)}
+.tpl svg{width:100%;height:auto;background:#fff;border-radius:6px;border:1px solid var(--line)}
+.tpl b{font-size:13.5px;line-height:1.3}.tpl span{font-size:12px;color:var(--muted);line-height:1.35}
+.btn[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+@keyframes flow{to{stroke-dashoffset:-36}}
+#sheet .flow{animation:flow 1.1s linear infinite}
+#sheet .vh,#sheet .sh{cursor:grab}
+#sheet .port{cursor:crosshair}
+@media (prefers-reduced-motion:reduce){#sheet .flow{animation:none}}
+</style>
+</head>
+<body>
+
+
+<header class="top">
+  <div class="brand">
+    <svg class="logo" viewBox="0 0 36 36" aria-hidden="true"><rect x="1" y="1" width="34" height="34" rx="8" fill="var(--fg)"/><path d="M9 26V12h6v14M21 26V10h6v16" stroke="var(--bg)" stroke-width="2.5" fill="none"/><path d="M15 15h6M15 22h6" stroke="#E0453A" stroke-width="2.5"/></svg>
+    <div><h1>Конструктор котельной</h1><small>Схема обвязки, номера узлов для наклеек и спецификация на одном листе</small></div>
+  </div>
+</header>
+
+<div class="toolbar" role="toolbar" aria-label="Инструменты">
+  <div class="seg" role="group" aria-label="Режим">
+    <button id="mSelect" aria-pressed="true">Выбор</button>
+    <button id="mPipe" aria-pressed="false">Труба</button>
+  </div>
+  <div class="pipes" id="pipeChips" role="group" aria-label="Тип трубы"></div>
+  <button class="btn" id="finishPipe" hidden>Завершить трубу</button>
+  <span class="spacer"></span>
+  <button class="btn" id="undo" title="Ctrl+Z">Отменить</button>
+  <button class="btn" id="flowBtn" aria-pressed="true" title="Анимация движения теплоносителя">Поток</button>
+  <button class="btn" id="tplBtn">Шаблоны</button>
+  <button class="btn" id="codeBtn">Код схемы</button>
+  <button class="btn primary" id="pngBtn">Сохранить картинку</button>
+</div>
+<p class="hint" id="hint" style="margin:-4px 0 10px"></p>
+
+<div class="app">
+  <aside class="panel lib" aria-label="Библиотека узлов"><h2>Узлы</h2><div id="lib"></div></aside>
+
+  <section class="stage">
+    <div class="canvas-wrap" id="wrap"><svg id="sheet" xmlns="http://www.w3.org/2000/svg"></svg></div>
+    <div class="stage-foot">
+      <div class="zoom"><button class="btn" id="zOut" aria-label="Уменьшить">−</button><span id="zVal">100%</span><button class="btn" id="zIn" aria-label="Увеличить">+</button><button class="btn" id="zFit">По ширине</button></div>
+      <span class="spacer"></span>
+      <button class="btn" id="renum">Перенумеровать по порядку</button>
+      <button class="btn warn" id="clear">Очистить лист</button>
+    </div>
+  </section>
+
+  <aside class="side">
+    <div class="panel" id="insp"><h2>Свойства</h2><div id="inspBody"></div></div>
+    <div class="panel"><h2>Штамп листа</h2>
+      <div class="field"><label for="mObj">Объект</label><input id="mObj"></div>
+      <div class="field"><label for="mAddr">Адрес</label><input id="mAddr"></div>
+      <div class="field"><label for="mInst">Монтаж выполнил</label><input id="mInst"></div>
+      <div class="field"><label for="mPhone">Телефон мастера</label><input id="mPhone"></div>
+      <div class="field"><label for="mDate">Дата монтажа</label><input id="mDate"></div>
+    </div>
+    <div class="panel"><h2>Спецификация</h2><table class="spec"><tbody id="spec"></tbody></table></div>
+  </aside>
+</div>
+
+<div class="modal" id="modal" hidden><div class="modal-box" id="modalBox"></div></div>
+
+<script>
+(function(){
+const G=10, W=1400, H=990, DRAW_R=1080, PORT_R=14;
+const INK="#1D2733";
+const PIPES={
+  sup:{n:"Подача отопления",c:"#D7262E"},
+  ret:{n:"Обратка отопления",c:"#1F5BC4"},
+  ufs:{n:"Тёплый пол, подача",c:"#E0559A"},
+  ufr:{n:"Тёплый пол, обратка",c:"#7C5BD6"},
+  hw:{n:"ГВС (горячая вода)",c:"#E8811A"},
+  cw:{n:"ХВС (холодная вода)",c:"#17A2C8"},
+  rc:{n:"Рециркуляция ГВС",c:"#B8860B",dash:"10 6"},
+  gas:{n:"Газ",c:"#D4A800"}
+};
+const S=`stroke="${INK}" stroke-width="2" fill="none"`, SF=`stroke="${INK}" stroke-width="2" fill="#fff"`;
+const bow=(x,y,w,h)=>`<path d="M${x} ${y} L${x+w} ${y+h} L${x+w} ${y} L${x} ${y+h} Z" ${SF}/>`;
+const P=(id,x,y,d)=>({id,x,y,d});
+const LR=[P("a",0,10,"l"),P("b",40,10,"r")];
+/* d: l r t b — куда «смотрит» патрубок */
+const DEFS={
+ boiler_gas:{n:"Котёл газовый двухконтурный",g:"Котлы",w:80,h:100,ports:[P("sup",10,100,"b"),P("hw",30,100,"b"),P("gas",40,100,"b"),P("cw",50,100,"b"),P("ret",70,100,"b")],
+   d:()=>`<rect x="1" y="1" width="78" height="98" rx="6" ${SF}/><rect x="18" y="12" width="44" height="16" rx="2" ${S}/><path d="M40 80c-12-8-6-22 0-30 1 8 10 10 8 20-1 6-4 9-8 10z" stroke="${INK}" stroke-width="2" fill="#FFE1A8"/><text x="40" y="24" font-size="10" text-anchor="middle" fill="${INK}" font-family="Arial">2К</text>`},
+ boiler_gas1:{n:"Котёл газовый одноконтурный",g:"Котлы",w:80,h:100,ports:[P("sup",10,100,"b"),P("gas",40,100,"b"),P("ret",70,100,"b")],
+   d:()=>`<rect x="1" y="1" width="78" height="98" rx="6" ${SF}/><rect x="18" y="12" width="44" height="16" rx="2" ${S}/><path d="M40 80c-12-8-6-22 0-30 1 8 10 10 8 20-1 6-4 9-8 10z" stroke="${INK}" stroke-width="2" fill="#FFE1A8"/><text x="40" y="24" font-size="10" text-anchor="middle" fill="${INK}" font-family="Arial">1К</text>`},
+ boiler_el:{n:"Котёл электрический",g:"Котлы",w:80,h:100,ports:[P("sup",20,100,"b"),P("ret",60,100,"b")],
+   d:()=>`<rect x="1" y="1" width="78" height="98" rx="6" ${SF}/><rect x="18" y="12" width="44" height="16" rx="2" ${S}/><path d="M45 42 L32 63 H42 L36 83 L52 57 H42 L48 42Z" stroke="${INK}" stroke-width="2" fill="#FFE68A"/>`},
+ boiler_tt:{n:"Котёл твердотопливный",g:"Котлы",w:90,h:120,ports:[P("sup",0,30,"l"),P("ret",0,100,"l")],
+   d:()=>`<rect x="1" y="16" width="88" height="103" rx="4" ${SF}/><rect x="55" y="1" width="20" height="16" ${SF}/><rect x="16" y="34" width="58" height="34" rx="3" ${S}/><rect x="16" y="76" width="58" height="26" rx="3" ${S}/><path d="M45 64c-8-5-4-14 0-20 1 5 7 7 5 13-1 4-3 6-5 7z" stroke="${INK}" stroke-width="1.5" fill="#FFC27A"/>`},
+ tank_ind:{n:"Бойлер косвенного нагрева",g:"Ёмкости",w:80,h:160,ports:[P("hw",40,0,"t"),P("cs",80,60,"r"),P("cr",80,120,"r"),P("cw",40,160,"b"),P("rc",0,90,"l")],
+   d:()=>`<rect x="1" y="1" width="78" height="158" rx="32" ${SF}/><path d="M80 60 H58 l-26 10 26 10 -26 10 26 10 -26 10 26 10 H80" stroke="${INK}" stroke-width="2" fill="none"/><text x="40" y="146" font-size="11" text-anchor="middle" fill="${INK}" font-family="Arial">БКН</text>`},
+ tank_el:{n:"Водонагреватель электрический",g:"Ёмкости",w:80,h:140,ports:[P("cw",30,140,"b"),P("hw",50,140,"b")],
+   d:()=>`<rect x="1" y="1" width="78" height="138" rx="30" ${SF}/><path d="M43 46 L33 66 H41 L36 84 L49 60 H41 L46 46Z" stroke="${INK}" stroke-width="1.6" fill="#FFE68A"/>`},
+ buffer:{n:"Буферная ёмкость",g:"Ёмкости",w:80,h:180,ports:[P("l1",0,30,"l"),P("l2",0,150,"l"),P("r1",80,30,"r"),P("r2",80,150,"r")],
+   d:()=>`<rect x="1" y="1" width="78" height="178" rx="32" ${SF}/><path d="M12 70H68M12 115H68" stroke="${INK}" stroke-width="1" stroke-dasharray="4 4"/><text x="40" y="97" font-size="12" text-anchor="middle" fill="${INK}" font-family="Arial">БЕ</text>`},
+ exp_heat:{n:"Расширительный бак отопления",g:"Ёмкости",w:40,h:70,ports:[P("p",20,0,"t")],
+   d:()=>`<rect x="15" y="0" width="10" height="10" ${SF}/><rect x="1" y="10" width="38" height="58" rx="17" stroke="${INK}" stroke-width="2" fill="#F7C9C9"/>`},
+ exp_dhw:{n:"Расширительный бак ГВС",g:"Ёмкости",w:40,h:70,ports:[P("p",20,0,"t")],
+   d:()=>`<rect x="15" y="0" width="10" height="10" ${SF}/><rect x="1" y="10" width="38" height="58" rx="17" ${SF}/><path d="M7 39H33" stroke="${INK}" stroke-width="1" stroke-dasharray="3 3"/>`},
+ accum:{n:"Гидроаккумулятор",g:"Ёмкости",w:40,h:80,ports:[P("p",20,0,"t")],
+   d:()=>`<rect x="15" y="0" width="10" height="10" ${SF}/><rect x="1" y="10" width="38" height="68" rx="17" stroke="${INK}" stroke-width="2" fill="#C9DDF6"/>`},
+ hydro:{n:"Гидрострелка",g:"Распределение",w:40,h:140,ports:[P("l1",0,20,"l"),P("l2",0,120,"l"),P("r1",40,20,"r"),P("r2",40,120,"r")],
+   d:()=>`<rect x="1" y="1" width="38" height="138" rx="4" ${SF}/><path d="M20 12V128" stroke="${INK}" stroke-width="1" stroke-dasharray="5 4"/><path d="M14 64l6 -8 6 8M14 82l6 8 6 -8" ${S}/>`},
+ manifold:{n:"Коллектор отопления",g:"Распределение",w:240,h:40,ports:[P("in_s",240,10,"r"),P("in_r",240,30,"r"),P("l_s",0,10,"l"),P("l_r",0,30,"l"),...[0,1,2,3].flatMap(i=>[P("s"+i,20+60*i,40,"b"),P("r"+i,40+60*i,40,"b")])],
+   d:()=>`<rect x="1" y="4" width="238" height="12" rx="2" stroke="${INK}" stroke-width="2" fill="#F5C5C5"/><rect x="1" y="24" width="238" height="12" rx="2" stroke="${INK}" stroke-width="2" fill="#C7D7F2"/>${[0,1,2,3].map(i=>`<path d="M${20+60*i} 16V40" stroke="${INK}" stroke-width="2"/><path d="M${40+60*i} 36V40" stroke="${INK}" stroke-width="2"/>`).join("")}`},
+ pg:{n:"Насосная группа прямая",g:"Распределение",w:60,h:100,ports:[P("is",20,0,"t"),P("ir",40,0,"t"),P("os",20,100,"b"),P("or",40,100,"b")],
+   d:()=>`<rect x="3" y="1" width="54" height="98" rx="4" ${SF}/><path d="M20 4V96M40 4V96" stroke="${INK}" stroke-width="1.5"/><circle cx="20" cy="45" r="11" ${SF}/><path d="M13 52 L20 36 L27 52" ${S}/><circle cx="20" cy="80" r="6" ${SF}/><circle cx="40" cy="80" r="6" ${SF}/><circle cx="20" cy="80" r="2" fill="#D7262E"/><circle cx="40" cy="80" r="2" fill="#1F5BC4"/>`},
+ pg_mix:{n:"Насосная группа со смесителем",g:"Распределение",w:60,h:100,ports:[P("is",20,0,"t"),P("ir",40,0,"t"),P("os",20,100,"b"),P("or",40,100,"b")],
+   d:()=>`<rect x="3" y="1" width="54" height="98" rx="4" ${SF}/><path d="M20 4V96M40 4V96" stroke="${INK}" stroke-width="1.5"/><path d="M12 14 L28 24 L28 14 L12 24Z" ${SF}/><path d="M28 19 H40" stroke="${INK}" stroke-width="1.5"/><circle cx="20" cy="50" r="11" ${SF}/><path d="M13 57 L20 41 L27 57" ${S}/><circle cx="20" cy="82" r="6" ${SF}/><circle cx="40" cy="82" r="6" ${SF}/>`},
+ pump:{n:"Насос циркуляционный",g:"Распределение",w:40,h:40,ports:[P("a",0,20,"l"),P("b",40,20,"r")],
+   d:()=>`<circle cx="20" cy="20" r="18" ${SF}/><path d="M8 30 L20 4 L32 30" ${S}/>`},
+ uf_man:{n:"Коллектор тёплого пола",g:"Распределение",w:160,h:60,ports:[P("s",0,10,"l"),P("r",0,50,"l"),P("s2",160,10,"r"),P("r2",160,50,"r")],
+   d:()=>`<rect x="1" y="4" width="158" height="12" rx="2" stroke="${INK}" stroke-width="2" fill="#F6C3DD"/><rect x="1" y="44" width="158" height="12" rx="2" stroke="${INK}" stroke-width="2" fill="#D9CDF4"/>${[20,45,70,95,120,140].map(x=>`<path d="M${x} 16V44" stroke="${INK}" stroke-width="1"/><circle cx="${x}" cy="30" r="3.5" stroke="${INK}" stroke-width="1.2" fill="#fff"/>`).join("")}`},
+ rad:{n:"Радиатор",g:"Приборы",w:100,h:50,ports:[P("s",0,10,"l"),P("r",0,40,"l"),P("s2",100,10,"r"),P("r2",100,40,"r")],
+   d:()=>`<rect x="1" y="1" width="98" height="48" rx="3" ${SF}/>${[14,26,38,50,62,74,86].map(x=>`<path d="M${x} 7V43" stroke="${INK}" stroke-width="1.5"/>`).join("")}`},
+ floor:{n:"Контур тёплого пола",g:"Приборы",w:120,h:60,ports:[P("s",0,10,"l"),P("r",0,50,"l")],
+   d:()=>`<rect x="1" y="1" width="118" height="58" rx="2" stroke="${INK}" stroke-width="1" stroke-dasharray="4 3" fill="#fff"/><path d="M0 10H110V22H10V34H110V46H10V50H0" stroke="#E0559A" stroke-width="2" fill="none"/>`},
+ valve:{n:"Кран шаровой",g:"Арматура",w:40,h:20,ports:LR,d:()=>`${bow(4,2,32,16)}<circle cx="20" cy="10" r="3" fill="${INK}"/>`},
+ check:{n:"Обратный клапан",g:"Арматура",w:40,h:20,ports:LR,d:()=>`<path d="M6 2 L30 10 L6 18Z" stroke="${INK}" stroke-width="2" fill="${INK}"/><path d="M33 1V19" stroke="${INK}" stroke-width="2.5"/>`},
+ valve3:{n:"Трёхходовой клапан",g:"Арматура",w:40,h:40,ports:[P("in",20,0,"t"),P("a",0,20,"l"),P("b",40,20,"r")],
+   d:()=>`<path d="M2 12 L20 20 L2 28Z M38 12 L20 20 L38 28Z M12 2 L20 20 L28 2Z" ${SF}/><circle cx="20" cy="20" r="3" fill="${INK}"/><rect x="14" y="26" width="12" height="12" rx="2" ${SF}/>`},
+ makeup:{n:"Кран подпитки",g:"Арматура",w:40,h:30,ports:LR,d:()=>`${bow(4,2,32,16)}<text x="20" y="30" font-size="11" font-weight="bold" text-anchor="middle" font-family="Arial" fill="${INK}">П</text>`},
+ drain:{n:"Кран слива",g:"Арматура",w:40,h:34,ports:LR,d:()=>`${bow(4,2,32,16)}<path d="M20 18V32M15 27l5 5 5 -5" ${S}/>`},
+ reducer:{n:"Редуктор давления",g:"Арматура",w:40,h:20,ports:LR,d:()=>`<path d="M4 6 L36 1 V19 L4 14Z" ${SF}/><path d="M16 4V-6M12 -6H24" stroke="${INK}" stroke-width="1.5"/>`},
+ safety:{n:"Группа безопасности",g:"Арматура",w:40,h:50,ports:[P("p",20,50,"b")],
+   d:()=>`<circle cx="20" cy="12" r="10" ${SF}/><path d="M20 12 L26 7" stroke="${INK}" stroke-width="2"/><path d="M20 22V50M8 30H32M12 38H28" stroke="${INK}" stroke-width="2"/><path d="M32 30v8 l4 2" ${S}/>`},
+ vent:{n:"Воздухоотводчик",g:"Арматура",w:20,h:30,ports:[P("p",10,30,"b")],
+   d:()=>`<rect x="3" y="6" width="14" height="18" rx="2" ${SF}/><path d="M10 6V0M6 0H14M10 24V30" stroke="${INK}" stroke-width="2"/>`},
+ gauge:{n:"Манометр",g:"Контроль",w:40,h:40,ports:[P("p",20,40,"b")],
+   d:()=>`<circle cx="20" cy="16" r="14" ${SF}/><path d="M20 16 L28 9" stroke="${INK}" stroke-width="2"/><path d="M10 22a11 11 0 0 1 2 -14" stroke="#2BA84A" stroke-width="3" fill="none"/><path d="M20 30V40" stroke="${INK}" stroke-width="2"/>`},
+ thermo:{n:"Термометр",g:"Контроль",w:20,h:40,ports:[P("p",10,40,"b")],
+   d:()=>`<rect x="6" y="1" width="8" height="26" rx="4" ${SF}/><circle cx="10" cy="30" r="6" stroke="${INK}" stroke-width="2" fill="#D7262E"/><path d="M10 36V40" stroke="${INK}" stroke-width="2"/>`},
+ value:{n:"Плашка показания",g:"Контроль",w:80,h:24,nonum:true,ports:[],d:()=>``},
+ filter_y:{n:"Фильтр сетчатый",g:"Водоподготовка",w:40,h:30,ports:LR,d:()=>`<path d="M2 10H38" stroke="${INK}" stroke-width="2"/><path d="M14 10 L28 27" stroke="${INK}" stroke-width="7" stroke-linecap="round"/><path d="M14 10 L28 27" stroke="#fff" stroke-width="3" stroke-linecap="round"/>`},
+ filter_f:{n:"Фильтр колбовый",g:"Водоподготовка",w:40,h:60,ports:LR,d:()=>`<rect x="1" y="4" width="38" height="12" rx="2" ${SF}/><rect x="6" y="16" width="28" height="42" rx="6" stroke="${INK}" stroke-width="2" fill="#CFE3F7"/>`},
+ meter:{n:"Счётчик воды",g:"Водоподготовка",w:40,h:20,ports:LR,d:()=>`<rect x="1" y="0" width="38" height="20" rx="4" ${SF}/><circle cx="20" cy="10" r="6" ${S}/><path d="M20 10 L24 6" stroke="${INK}" stroke-width="1.5"/>`},
+ text:{n:"Подпись",g:"Прочее",w:160,h:20,nonum:true,ports:[],d:()=>``}
+};
+const GROUPS=["Котлы","Ёмкости","Распределение","Приборы","Арматура","Контроль","Водоподготовка","Прочее"];
+const DV={l:[-1,0],r:[1,0],t:[0,-1],b:[0,1]};
+const ROT={l:{90:"t",180:"r",270:"b"},r:{90:"b",180:"l",270:"t"},t:{90:"r",180:"b",270:"l"},b:{90:"l",180:"t",270:"r"}};
+
+/* ---------- геометрия ---------- */
+const snap=v=>Math.round(v/G)*G;
+const same=(a,b)=>a&&b&&a[0]===b[0]&&a[1]===b[1];
+function portAbs(o,pid){const D=DEFS[o.type];const p=D&&D.ports.find(q=>q.id===pid);if(!p)return null;const cx=D.w/2,cy=D.h/2,dx=p.x-cx,dy=p.y-cy,r=((o.rot||0)%360+360)%360;
+  let x=dx,y=dy;if(r===90){x=-dy;y=dx}else if(r===180){x=-dx;y=-dy}else if(r===270){x=dy;y=-dx}
+  return {pos:[Math.round(o.x+cx+x),Math.round(o.y+cy+y)],d:r?ROT[p.d][r]:p.d}}
+function clean(pts){const out=[];pts.forEach(p=>{if(!same(out[out.length-1],p))out.push([p[0],p[1]])});
+  for(let i=out.length-2;i>0;i--){const a=out[i-1],b=out[i],c=out[i+1];if((a[0]===b[0]&&b[0]===c[0])||(a[1]===b[1]&&b[1]===c[1]))out.splice(i,1)}return out}
+function ortho(pts,firstVert){const out=[pts[0]];let prevH=firstVert===undefined?null:!firstVert;
+  for(let i=1;i<pts.length;i++){const a=out[out.length-1],b=pts[i];
+    if(a[0]!==b[0]&&a[1]!==b[1]){const c=prevH===true?[a[0],b[1]]:[b[0],a[1]];out.push(c);prevH=c[1]===b[1]}
+    else prevH=a[1]===b[1];out.push(b)}return out}
+function route(a,da,b,db){const L=20;
+  const A1=da?[a[0]+DV[da][0]*L,a[1]+DV[da][1]*L]:a, B1=db?[b[0]+DV[db][0]*L,b[1]+DV[db][1]*L]:b;
+  const hA=da==="l"||da==="r", hB=db==="l"||db==="r";let mid;
+  if(da&&db&&hA&&hB){const m=snap((A1[0]+B1[0])/2);mid=[[m,A1[1]],[m,B1[1]]]}
+  else if(da&&db&&!hA&&!hB){const m=snap((A1[1]+B1[1])/2);mid=[[A1[0],m],[B1[0],m]]}
+  else if(da&&hA)mid=[[B1[0],A1[1]]];
+  else if(da)mid=[[A1[0],B1[1]]];
+  else if(db&&hB)mid=[[a[0],B1[1]]];
+  else mid=[[B1[0],a[1]]];
+  return clean(ortho([a,A1,...mid,B1,b],da?!hA:undefined))}
+
+/* ---------- шаблоны ---------- */
+const uid=()=>Math.random().toString(36).slice(2,9);
+function Builder(meta){
+  const st={meta:Object.assign({obj:"",addr:"",inst:"",phone:"",date:""},meta||{}),items:[],pipes:[]};const K={};let n=0;
+  const B={st,
+    add(key,type,x,y,label,note,rot){const D=DEFS[type];const o={id:key||uid(),type,x,y,rot:rot||0,n:D.nonum?0:++n,label:label||D.n,note:note||""};st.items.push(o);if(key)K[key]=o;return B},
+    text(x,y,t){st.items.push({id:uid(),type:"text",x,y,rot:0,n:0,label:t,note:""});return B},
+    val(x,y,t){st.items.push({id:uid(),type:"value",x,y,rot:0,n:0,label:t,note:""});return B},
+    end(ref){if(Array.isArray(ref))return{pos:ref,d:null,att:null};const[k,p]=ref.split(".");const pa=portAbs(K[k],p);if(!pa)throw new Error("port "+ref);return{pos:pa.pos,d:pa.d,att:{item:K[k].id,port:p}}},
+    pipe(kind,from,to,via){const A=B.end(from),Z=B.end(to);let pts;
+      if(via){pts=clean(ortho([A.pos,...via,Z.pos],A.d?!(A.d==="l"||A.d==="r"):undefined))}else pts=route(A.pos,A.d,Z.pos,Z.d);
+      st.pipes.push({id:uid(),kind,pts,a:A.att,b:Z.att,auto:!via});return B}};
+  return B}
+
+/* общий блок: коллектор + гидрострелка/буфер + насосные группы */
+function hub(b,hubType,groups){
+  b.add("M","manifold",380,330,"Коллектор отопления");
+  if(hubType==="buffer")b.add("H","buffer",660,310,"Буферная ёмкость");else b.add("H","hydro",660,320,"Гидрострелка");
+  b.pipe("sup","M.in_s","H.l1").pipe("ret","M.in_r","H.l2");
+  groups.forEach((g,i)=>{const k="G"+i;b.add(k,g.type,380+60*i,390,g.label,g.note||"");b.pipe("sup","M.s"+i,k+".is").pipe("ret","M.r"+i,k+".ir")});
+  return b}
+function dhwTank(b,gi){ // бойлер слева вверху от группы gi
+  const gx=380+60*gi;b.add("T","tank_ind",80,120,"Бойлер косвенного нагрева");
+  b.pipe("sup","G"+gi+".os","T.cs",[[gx+20,510],[220,510],[220,180]]);
+  b.pipe("ret","G"+gi+".or","T.cr",[[gx+40,530],[200,530],[200,240]]);
+  b.add("EXD","exp_dhw",20,640,"Расширительный бак ГВС");
+  b.pipe("cw",[1060,900],"T.cw",[[120,900]]).pipe("cw",[120,620],"EXD.p",[[40,620]]);
+  b.pipe("hw","T.hw",[1060,50],[[120,50]]);b.text(900,30,"К потребителям ГВС →").text(940,920,"Ввод ХВС ←");
+  b.add("VIN","valve",980,890,"Кран на вводе воды").add("FIN","filter_f",900,890,"Фильтр на вводе ХВС");return b}
+function ufLeft(b,gi,y){const gx=380+60*gi;b.add("UF","uf_man",gx-180,y,"Коллектор тёплого пола");b.pipe("ufs","G"+gi+".os","UF.s2").pipe("ufr","G"+gi+".or","UF.r2");return b}
+function radLeft(b,gi,y,key,label){const gx=380+60*gi;b.add(key,"rad",gx-120,y,label);b.pipe("sup","G"+gi+".os",key+".s2").pipe("ret","G"+gi+".or",key+".r2");return b}
+
+const TPL=[
+ {id:"t1",name:"Газовый двухконтурный котёл и радиаторы",desc:"Квартира или небольшой дом: котёл греет и отопление, и горячую воду, без бойлера.",build(){
+   const b=Builder({obj:"Котельная, двухконтурный газовый котёл"});
+   b.add("B","boiler_gas",500,100,"Котёл газовый двухконтурный");
+   b.pipe("sup",[140,420],[840,420]).pipe("ret",[140,460],[840,460]);
+   b.pipe("sup","B.sup",[510,420]).pipe("ret","B.ret",[570,460]);
+   [[180,"Радиатор, кухня"],[340,"Радиатор, гостиная"],[700,"Радиатор, спальня"],[860,"Радиатор, детская"]].forEach(([x,l],i)=>{const k="R"+i;b.add(k,"rad",x,280,l);b.pipe("sup",k+".s",[x-20,420]).pipe("ret",k+".r",[x-40,460])});
+   b.pipe("cw",[1060,700],[140,700]).pipe("cw",[550,700],"B.cw");
+   b.pipe("hw","B.hw",[140,600],[[530,600]]);
+   b.pipe("gas","B.gas",[1060,250],[[540,250]]);
+   b.add("VG","valve",920,240,"Кран газовый").add("VIN","valve",990,690,"Кран на вводе воды").add("FY","filter_y",920,690,"Фильтр сетчатый").add("MT","meter",850,690,"Счётчик воды");
+   b.add("DR","drain",100,440,"Кран слива системы").add("VT","vent",820,390,"Воздухоотводчик");
+   b.text(140,590,"← К потребителям ГВС").text(140,720,"← К потребителям ХВС").text(940,720,"Ввод ХВС").text(960,230,"Газ").val(600,130,"1,5 бар");
+   return b.st}},
+ {id:"t2",name:"Одноконтурный газовый котёл и бойлер через трёхходовой клапан",desc:"Котёл переключается между отоплением и нагревом бойлера.",build(){
+   const b=Builder({obj:"Котельная, одноконтурный котёл и бойлер"});
+   b.add("B","boiler_gas1",600,100,"Котёл газовый одноконтурный");
+   b.add("V3","valve3",600,260,"Трёхходовой клапан ГВС/отопление");
+   b.pipe("sup","B.sup","V3.in");
+   b.add("T","tank_ind",200,120,"Бойлер косвенного нагрева");
+   b.pipe("sup","V3.a","T.cs",[[320,280],[320,180]]);
+   b.pipe("ret","T.cr",[300,460],[[300,240]]);
+   b.pipe("sup","V3.b",[1000,420],[[660,280],[660,420]]).pipe("ret",[300,460],[1000,460]).pipe("ret","B.ret",[670,460]);
+   [[760,"Радиаторы 1 этажа"],[900,"Радиаторы 2 этажа"]].forEach(([x,l],i)=>{const k="R"+i;b.add(k,"rad",x,300,l);b.pipe("sup",k+".s",[x-20,420]).pipe("ret",k+".r",[x-40,460])});
+   b.add("EXH","exp_heat",420,480,"Расширительный бак отопления").pipe("ret",[440,460],"EXH.p");
+   b.pipe("cw",[1060,720],"T.cw",[[240,720]]);
+   b.add("EXD","exp_dhw",120,640,"Расширительный бак ГВС").pipe("cw",[240,620],"EXD.p",[[140,620]]);
+   b.pipe("cw",[560,720],[560,460]).add("MK","makeup",540,575,"Кран подпитки","",90);
+   b.pipe("hw","T.hw",[1060,60],[[240,60]]);
+   b.pipe("gas","B.gas",[1060,240],[[640,240]]).add("VG","valve",920,230,"Кран газовый");
+   b.add("VIN","valve",990,710,"Кран на вводе воды").add("FY","filter_y",920,710,"Фильтр сетчатый").add("RD","reducer",850,710,"Редуктор давления").add("MT","meter",780,710,"Счётчик воды");
+   b.add("MN","gauge",800,380,"Манометр");
+   b.text(840,40,"К потребителям ГВС →").text(950,740,"Ввод ХВС").text(970,220,"Газ");
+   return b.st}},
+ {id:"t3",name:"Электрокотёл, гидрострелка, 4 контура",desc:"Как на фото: коллектор Rommer, бойлер, тёплый пол, радиаторы двух этажей.",build(){
+   const b=Builder({obj:"Котельная, электрокотёл"});
+   hub(b,"hydro",[{type:"pg",label:"Насосная группа — бойлер ГВС",note:"Rommer"},{type:"pg_mix",label:"Насосная группа со смесителем — тёплый пол",note:"Rommer"},{type:"pg",label:"Насосная группа — радиаторы 1 этаж",note:"Rommer"},{type:"pg",label:"Насосная группа — радиаторы 2 этаж",note:"Rommer"}]);
+   b.st.items.find(o=>o.id==="M").note="Rommer";b.st.items.find(o=>o.id==="H").note="Rommer";
+   b.add("B","boiler_el",820,120,"Котёл электрический","Stout");
+   b.pipe("sup","B.sup","H.r1").pipe("ret","B.ret","H.r2");
+   b.add("EXH","exp_heat",920,300,"Расширительный бак отопления").pipe("ret",[880,280],"EXH.p",[[940,280]]);
+   dhwTank(b,0);ufLeft(b,1,550);radLeft(b,2,660,"R1","Радиаторы 1 этажа");radLeft(b,3,760,"R2","Радиаторы 2 этажа");
+   b.pipe("cw",[780,900],[780,460]).add("MK","makeup",760,700,"Кран подпитки","",90);
+   b.add("DR","drain",660,480,"Кран слива");
+   b.val(720,250,"1,5 бар").val(560,540,"55 °C");
+   return b.st}},
+ {id:"t4",name:"Газовый котёл, гидрострелка, бойлер, тёплый пол и радиаторы",desc:"Три насосные группы на коллекторе, одноконтурный газовый котёл.",build(){
+   const b=Builder({obj:"Котельная, газовый котёл, 3 контура"});
+   hub(b,"hydro",[{type:"pg",label:"Насосная группа — бойлер ГВС"},{type:"pg_mix",label:"Насосная группа со смесителем — тёплый пол"},{type:"pg",label:"Насосная группа — радиаторы"}]);
+   b.add("B","boiler_gas1",820,120,"Котёл газовый одноконтурный");
+   b.pipe("sup","B.sup","H.r1").pipe("ret","B.ret","H.r2");
+   b.pipe("gas","B.gas",[1060,260],[[860,260]]).add("VG","valve",960,250,"Кран газовый").text(980,230,"Газ");
+   b.add("EXH","exp_heat",960,320,"Расширительный бак отопления").pipe("ret",[890,300],"EXH.p",[[980,300]]);
+   dhwTank(b,0);ufLeft(b,1,550);radLeft(b,2,660,"R1","Радиаторы");
+   b.pipe("cw",[780,900],[780,460]).add("MK","makeup",760,700,"Кран подпитки","",90);
+   b.add("FY","filter_y",740,430,"Фильтр сетчатый на обратке");
+   return b.st}},
+ {id:"t5",name:"Твердотопливный котёл и буферная ёмкость",desc:"Дрова или уголь: буфер копит тепло, трёхходовой клапан защищает котёл от конденсата.",build(){
+   const b=Builder({obj:"Котельная, твердотопливный котёл"});
+   b.add("BE","buffer",560,200,"Буферная ёмкость");
+   b.add("B","boiler_tt",820,200,"Котёл твердотопливный");
+   b.pipe("sup","B.sup","BE.r1");
+   b.add("V3","valve3",750,280,"Термосмесительный клапан 55 °C");
+   b.pipe("ret","B.ret","V3.b").pipe("sup",[770,230],"V3.in");
+   b.pipe("ret","V3.a","BE.r2",[[720,300],[720,350]]);
+   b.add("PB","pump",660,330,"Насос котлового контура");
+   b.add("SG","safety",690,180,"Группа безопасности котла").add("TM","thermo",790,190,"Термометр подачи");
+   b.add("G0","pg_mix",400,300,"Насосная группа со смесителем — радиаторы");
+   b.pipe("sup","BE.l1","G0.is").pipe("ret","G0.ir","BE.l2",[[440,260],[500,260],[500,350]]);
+   b.add("R1","rad",260,480,"Радиаторы").pipe("sup","G0.os","R1.s2").pipe("ret","G0.or","R1.r2");
+   b.add("EXH","exp_heat",500,420,"Расширительный бак отопления").pipe("ret",[520,350],"EXH.p");
+   b.pipe("cw",[1060,520],[710,350],[[710,520]]).add("MK","makeup",690,425,"Кран подпитки","",90);
+   b.add("DR","drain",580,385,"Кран слива буфера");
+   b.text(900,540,"Ввод ХВС ←").val(900,150,"85 °C").val(260,560,"60 °C");
+   return b.st}},
+ {id:"t6",name:"Каскад: газовый котёл и резервный электрокотёл",desc:"Два котла на одну гидрострелку, обратные клапаны на подаче каждого котла.",build(){
+   const b=Builder({obj:"Котельная, каскад двух котлов"});
+   hub(b,"hydro",[{type:"pg",label:"Насосная группа — бойлер ГВС"},{type:"pg_mix",label:"Насосная группа со смесителем — тёплый пол"},{type:"pg",label:"Насосная группа — радиаторы"}]);
+   b.add("B1","boiler_gas1",780,110,"Котёл газовый (основной)").add("B2","boiler_el",920,110,"Котёл электрический (резервный)");
+   b.pipe("sup","B1.sup","H.r1").pipe("ret","B1.ret","H.r2");
+   b.pipe("sup","B2.sup",[790,340],[[940,340]]).pipe("ret","B2.ret",[850,440],[[980,440]]);
+   b.add("CK1","check",770,260,"Обратный клапан котла 1","",90).add("CK2","check",920,280,"Обратный клапан котла 2","",90);
+   b.pipe("gas","B1.gas",[1060,250],[[820,250]]);b.text(1000,230,"Газ");
+   b.add("EXH","exp_heat",1000,480,"Расширительный бак отопления").pipe("ret",[980,440],"EXH.p",[[980,460],[1020,460]]);
+   dhwTank(b,0);ufLeft(b,1,550);radLeft(b,2,660,"R1","Радиаторы");
+   b.pipe("cw",[760,900],[760,440]).add("MK","makeup",740,700,"Кран подпитки","",90);
+   return b.st}},
+ {id:"t7",name:"Комбинированная: твердотопливный и электрокотёл через буфер",desc:"Буферная ёмкость работает как гидрострелка: днём дрова, ночью электричество.",build(){
+   const b=Builder({obj:"Котельная, комбинированная"});
+   hub(b,"buffer",[{type:"pg",label:"Насосная группа — бойлер ГВС"},{type:"pg_mix",label:"Насосная группа со смесителем — тёплый пол"},{type:"pg",label:"Насосная группа — радиаторы"}]);
+   b.add("B1","boiler_tt",900,520,"Котёл твердотопливный").add("B2","boiler_el",880,110,"Котёл электрический");
+   b.pipe("sup","B1.sup","H.r1",[[860,550],[860,340]]).pipe("ret","B1.ret","H.r2",[[820,620],[820,460]]);
+   b.pipe("sup","B2.sup",[860,400],[[900,400]]).pipe("ret","B2.ret",[820,480],[[940,480]]);
+   b.add("PB","pump",840,600,"Насос котлового контура ТТ");
+   b.add("CK","check",880,320,"Обратный клапан электрокотла","",90);
+   b.add("EXH","exp_heat",980,300,"Расширительный бак отопления").pipe("ret",[940,280],"EXH.p",[[1000,280]]);
+   dhwTank(b,0);ufLeft(b,1,550);radLeft(b,2,660,"R1","Радиаторы");
+   b.pipe("cw",[760,900],[760,460]).add("MK","makeup",740,760,"Кран подпитки","",90);
+   b.val(760,300,"80 °C");
+   return b.st}},
+ {id:"t8",name:"Водоснабжение от скважины и водонагреватель",desc:"Ввод воды, фильтры, гидроаккумулятор, счётчик, электрический водонагреватель.",build(){
+   const b=Builder({obj:"Водоснабжение частного дома"});
+   b.pipe("cw",[1060,300],[100,300]);
+   b.add("VIN","valve",990,290,"Кран на вводе от скважины").add("FY","filter_y",920,290,"Фильтр грубой очистки").add("CK","check",850,290,"Обратный клапан");
+   b.add("AC","accum",760,340,"Гидроаккумулятор").pipe("cw",[780,300],"AC.p");
+   b.add("MN","gauge",700,260,"Манометр и реле давления");
+   b.add("F1","filter_f",620,290,"Фильтр механический 20 мкм").add("F2","filter_f",540,290,"Фильтр умягчения").add("MT","meter",470,290,"Счётчик воды");
+   b.add("RD","reducer",400,290,"Редуктор давления");
+   b.add("WH","tank_el",300,420,"Водонагреватель электрический");
+   b.pipe("cw",[220,300],"WH.cw",[[220,600],[330,600]]);
+   b.pipe("hw","WH.hw",[100,640],[[350,640]]);
+   b.add("SG","safety",260,550,"Группа безопасности водонагревателя");
+   b.add("EXD","exp_dhw",160,340,"Расширительный бак ГВС").pipe("cw",[180,300],"EXD.p");
+   b.text(900,320,"Ввод от скважины ←").text(110,280,"← К потребителям ХВС").text(110,660,"← К потребителям ГВС").val(690,220,"3,0 бар").val(400,470,"60 °C");
+   return b.st}}
+];
+const getTpl=id=>{const t=TPL.find(q=>q.id===id);return t.build()};
+const EMPTY=()=>({meta:{obj:"",addr:"",inst:"",phone:"",date:""},items:[],pipes:[]});
+
+/* ---------- состояние ---------- */
+const KEY="kotelnaya-v2";
+let st, sel=null, mode="select", placing=null, pipeKind="sup", draft=null, cursor=null, hoverPort=null, zoom=1, undoStack=[], flow=true;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function load(){try{const s=localStorage.getItem(KEY);if(s){const o=JSON.parse(s);if(o&&o.items&&o.pipes)return o}}catch(e){}return getTpl("t3")}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+function push(){undoStack.push(JSON.stringify(st));if(undoStack.length>80)undoStack.shift()}
+try{flow=localStorage.getItem(KEY+"-flow")!=="0"}catch(e){}
+st=load();
+
+const itemById=id=>st.items.find(o=>o.id===id);
+function attPos(att){const o=att&&itemById(att.item);return o?portAbs(o,att.port):null}
+
+/* трубы, прикреплённые к узлу, следуют за ним */
+function moveEnd(p,end,P){const pts=p.pts.map(q=>q.slice());const i=end==="a"?0:pts.length-1,j=end==="a"?1:pts.length-2;const old=pts[i];
+  if(pts.length>2){const N=pts[j];if(N[0]===old[0]&&N[1]!==old[1])N[0]=P[0];else if(N[1]===old[1])N[1]=P[1]}
+  pts[i]=P;p.pts=clean(end==="a"?ortho(pts.reverse()).reverse():ortho(pts))}
+function updateAttached(o){st.pipes.forEach(p=>{["a","b"].forEach(e=>{if(p[e]&&p[e].item===o.id){const pa=portAbs(o,p[e].port);if(!pa){p[e]=null;return}
+  if(p.auto){const A=p.a?attPos(p.a):{pos:p.pts[0],d:null},Z=p.b?attPos(p.b):{pos:p.pts[p.pts.length-1],d:null};if(A&&Z)p.pts=route(A.pos,A.d,Z.pos,Z.d)}
+  else moveEnd(p,e,pa.pos)}})})}
+
+/* ---------- рисование листа ---------- */
+function arrowHeads(pts,c){let s="";for(let i=0;i<pts.length-1;i++){const[a,b]=[pts[i],pts[i+1]];const len=Math.hypot(b[0]-a[0],b[1]-a[1]);if(len<50)continue;const mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2,ang=Math.atan2(b[1]-a[1],b[0]-a[0])*180/Math.PI;s+=`<path d="M-6 -5 L6 0 L-6 5Z" fill="${c}" transform="translate(${mx} ${my}) rotate(${ang})"/>`}return s}
+function pipeSVG(p,o){const k=PIPES[p.kind]||PIPES.sup;const d=p.pts.map(q=>q.join(",")).join(" ");const isSel=o.sel===p.id;
+  let s=`<g class="pp" data-pid="${p.id}">${isSel?`<polyline points="${d}" stroke="#41C2CA" stroke-width="12" stroke-opacity=".45" fill="none" stroke-linejoin="round"/>`:""}<polyline points="${d}" stroke="${k.c}" stroke-width="4" fill="none" stroke-linejoin="round" stroke-linecap="round"${k.dash?` stroke-dasharray="${k.dash}"`:""}/>`;
+  if(o.flow&&p.kind!=="gas")s+=`<polyline class="flow" points="${d}" stroke="#fff" stroke-opacity=".85" stroke-width="2" stroke-dasharray="4 14" fill="none" stroke-linejoin="round"/>`;
+  else s+=arrowHeads(p.pts,k.c);
+  s+=`<polyline points="${d}" stroke="transparent" stroke-width="14" fill="none" pointer-events="stroke"/></g>`;return s}
+function handlesSVG(p){let s="";const n=p.pts.length;
+  for(let k=0;k<n-1;k++){const a=p.pts[k],b=p.pts[k+1];const len=Math.abs(a[0]-b[0])+Math.abs(a[1]-b[1]);if(len<24)continue;const h=a[1]===b[1];const mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2;
+    s+=`<rect class="sh" data-k="${k}" x="${mx-(h?9:4)}" y="${my-(h?4:9)}" width="${h?18:8}" height="${h?8:18}" rx="3" fill="#fff" stroke="#0B7A84" stroke-width="2" style="cursor:${h?"ns-resize":"ew-resize"}"/>`}
+  p.pts.forEach((q,i)=>{const end=i===0||i===n-1;const att=end&&(i===0?p.a:p.b);
+    s+=`<rect class="vh" data-i="${i}" x="${q[0]-6}" y="${q[1]-6}" width="12" height="12" rx="${end?6:2}" fill="${att?"#0B7A84":"#fff"}" stroke="#0B7A84" stroke-width="2"/>`});return s}
+function itemSVG(o,isSel){const D=DEFS[o.type];if(!D)return"";const cx=D.w/2,cy=D.h/2;let inner;
+  if(o.type==="text")inner=`<rect x="0" y="0" width="${D.w}" height="${D.h}" fill="transparent"/><text x="0" y="15" font-size="14" font-family="Arial" font-weight="bold" fill="${INK}">${esc(o.label)}</text>`;
+  else if(o.type==="value")inner=`<rect x="0" y="0" width="${D.w}" height="${D.h}" rx="5" fill="${INK}"/><text x="${D.w/2}" y="16.5" font-size="13" font-family="Arial" font-weight="bold" text-anchor="middle" fill="#7CF3A0">${esc(o.label)}</text>`;
+  else inner=`<g transform="rotate(${o.rot||0} ${cx} ${cy})">${D.d()}</g>`;
+  const tag=D.nonum?"":`<g transform="translate(-6 -6)"><circle r="11" fill="#FFD400" stroke="#111" stroke-width="1.6"/><text y="4.5" font-size="12" font-weight="bold" text-anchor="middle" font-family="Arial" fill="#111">${o.n}</text></g>`;
+  const box=isSel?`<rect x="-6" y="-6" width="${D.w+12}" height="${D.h+12}" fill="none" stroke="#0B7A84" stroke-width="2" stroke-dasharray="5 4" rx="4"/>`:"";
+  return `<g class="it" data-id="${o.id}" transform="translate(${o.x} ${o.y})">${box}${inner}${tag}</g>`}
+function portsSVG(s,o){let out="";const conn=new Set();s.pipes.forEach(p=>{if(p.a)conn.add(p.a.item+"/"+p.a.port);if(p.b)conn.add(p.b.item+"/"+p.b.port)});
+  s.items.forEach(it=>{if(!(o.allPorts||it.id===o.sel))return;(DEFS[it.type]?.ports||[]).forEach(pt=>{const pa=portAbs(it,pt.id);const c=conn.has(it.id+"/"+pt.id);const hv=hoverPort&&hoverPort.item===it.id&&hoverPort.port===pt.id;
+    out+=`<circle class="port" data-item="${it.id}" data-port="${pt.id}" cx="${pa.pos[0]}" cy="${pa.pos[1]}" r="${hv?8:5}" fill="${c?"#0B7A84":"#fff"}" stroke="#0B7A84" stroke-width="2"/>`})});return out}
+function trunc(s,n){s=String(s||"");return s.length>n?s.slice(0,n-1)+"…":s}
+function sheetSVG(s,o){o=o||{};let out=`<rect width="${W}" height="${H}" fill="#FFFFFF"/>`;
+  if(!o.thumb){let grid="";for(let x=20;x<=DRAW_R;x+=20)grid+=`M${x} 10V${H-10}`;for(let y=20;y<H-10;y+=20)grid+=`M10 ${y}H${DRAW_R}`;out+=`<path d="${grid}" stroke="#E8EEF1" stroke-width="1"/>`}
+  out+=`<rect x="10" y="10" width="${W-20}" height="${H-20}" fill="none" stroke="${INK}" stroke-width="2"/><path d="M${DRAW_R} 10V${H-10}" stroke="${INK}" stroke-width="1.5"/>`;
+  s.pipes.forEach(p=>out+=pipeSVG(p,o));
+  if(o.draft){out+=`<polyline points="${o.draft.map(q=>q.join(",")).join(" ")}" stroke="${PIPES[pipeKind].c}" stroke-width="4" stroke-dasharray="6 5" fill="none"/>`}
+  s.items.forEach(it=>out+=itemSVG(it,it.id===o.sel));
+  if(!o.thumb)out+=portsSVG(s,o);
+  const sp=o.sel&&s.pipes.find(p=>p.id===o.sel);if(sp&&!o.export)out+=handlesSVG(sp);
+  if(o.thumb)return out;
+  const X=DRAW_R+14;let y=40;
+  out+=`<text x="${X}" y="${y}" font-size="15" font-weight="bold" font-family="Arial" fill="${INK}">СПЕЦИФИКАЦИЯ</text>`;y+=12;
+  const list=s.items.filter(it=>!DEFS[it.type]?.nonum).sort((a,b)=>a.n-b.n);const maxRows=24;
+  list.slice(0,maxRows).forEach(it=>{y+=22;out+=`<circle cx="${X+9}" cy="${y-5}" r="9" fill="#FFD400" stroke="#111" stroke-width="1.2"/><text x="${X+9}" y="${y-1}" font-size="10" font-weight="bold" text-anchor="middle" font-family="Arial" fill="#111">${it.n}</text><text x="${X+24}" y="${y-1}" font-size="11.5" font-family="Arial" fill="${INK}">${esc(trunc(it.label,34))}</text>${it.note?`<text x="${X+24}" y="${y+10}" font-size="9.5" font-family="Arial" fill="#5B6B75">${esc(trunc(it.note,40))}</text>`:""}`;if(it.note)y+=8});
+  if(list.length>maxRows){y+=20;out+=`<text x="${X}" y="${y}" font-size="11" font-family="Arial" fill="#5B6B75">…и ещё ${list.length-maxRows} поз.</text>`}
+  const used=[...new Set(s.pipes.map(p=>p.kind))];let ly=H-130-used.length*20-30;
+  if(used.length){out+=`<text x="${X}" y="${ly}" font-size="13" font-weight="bold" font-family="Arial" fill="${INK}">ТРУБОПРОВОДЫ</text>`;used.forEach((k,i)=>{const yy=ly+20+i*20;out+=`<path d="M${X} ${yy-4}H${X+34}" stroke="${PIPES[k].c}" stroke-width="4"${PIPES[k].dash?` stroke-dasharray="${PIPES[k].dash}"`:""}/><text x="${X+42}" y="${yy}" font-size="11.5" font-family="Arial" fill="${INK}">${PIPES[k].n}</text>`})}
+  const sx=DRAW_R,sy=H-120,m=s.meta||{};
+  out+=`<rect x="${sx}" y="${sy}" width="${W-10-sx}" height="110" fill="#fff" stroke="${INK}" stroke-width="2"/>`;
+  [["Объект",m.obj],["Адрес",m.addr],["Монтаж",m.inst],["Телефон",m.phone],["Дата",m.date]].forEach((r,i)=>{const yy=sy+20+i*20;out+=`<text x="${sx+8}" y="${yy}" font-size="10.5" font-family="Arial" fill="#5B6B75">${r[0]}</text><text x="${sx+68}" y="${yy}" font-size="12" font-family="Arial" fill="${INK}" font-weight="bold">${esc(trunc(r[1],30))}</text>${i<4?`<path d="M${sx} ${yy+6}H${W-10}" stroke="${INK}" stroke-width=".6"/>`:""}`});
+  out+=`<path d="M${sx+62} ${sy}V${H-10}" stroke="${INK}" stroke-width=".6"/><text x="${X}" y="${sy-10}" font-size="10" font-family="Arial" fill="#8A99A1">Схема принципиальная. Паспорт котельной, лист 1</text>`;
+  return out}
+
+const svg=$("sheet");
+let inFrame=true;try{inFrame=window.self!==window.top}catch(e){}
+function draftPts(){if(!draft)return null;const pts=draft.pts.slice();if(cursor){const L=pts[pts.length-1];
+  if(hoverPort&&draft.pts.length===1&&draft.a){const A=attPos(draft.a),Z=attPos(hoverPort);if(A&&Z)return route(A.pos,A.d,Z.pos,Z.d)}
+  const tgt=hoverPort?attPos(hoverPort).pos:cursor;pts.push([tgt[0],L[1]],tgt)}return pts}
+function render(){
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`);svg.setAttribute("width",W*zoom);svg.setAttribute("height",H*zoom);
+  svg.innerHTML=sheetSVG(st,{sel,flow,allPorts:mode==="pipe",draft:draftPts()});
+  svg.classList.toggle("mode-pipe",mode==="pipe");svg.classList.toggle("mode-place",!!placing);
+  $("zVal").textContent=Math.round(zoom*100)+"%"}
+function renderAll(){render();renderInsp();renderSpec();renderMeta();save()}
+
+/* ---------- библиотека ---------- */
+function buildLib(){const lib=$("lib");lib.innerHTML="";
+  GROUPS.forEach(g=>{const types=Object.keys(DEFS).filter(t=>DEFS[t].g===g);if(!types.length)return;
+    const wrap=document.createElement("div");wrap.className="lib-group";wrap.innerHTML=`<h3>${g}</h3>`;const grid=document.createElement("div");grid.className="lib-grid";
+    types.forEach(t=>{const D=DEFS[t];const b=document.createElement("button");b.className="tile";b.dataset.type=t;b.setAttribute("aria-pressed","false");const pad=6;
+      b.innerHTML=t==="text"?`<svg viewBox="0 0 46 42"><text x="23" y="27" font-size="16" font-weight="bold" text-anchor="middle" font-family="Arial" fill="currentColor">Аа</text></svg>${D.n}`:t==="value"?`<svg viewBox="0 0 46 42"><rect x="2" y="12" width="42" height="18" rx="4" fill="${INK}"/><text x="23" y="25" font-size="10" font-weight="bold" text-anchor="middle" font-family="Arial" fill="#7CF3A0">1,5 бар</text></svg>${D.n}`:`<svg viewBox="${-pad} ${-pad} ${D.w+pad*2} ${D.h+pad*2}" preserveAspectRatio="xMidYMid meet">${D.d()}</svg>${D.n}`;
+      b.onclick=()=>{placing=placing===t?null:t;setMode("select",true);updateLibPressed();hint(placing?`Щёлкните по листу, чтобы поставить: «${D.n}». Esc — отмена.`:null)};grid.appendChild(b)});
+    wrap.appendChild(grid);lib.appendChild(wrap)})}
+function updateLibPressed(){document.querySelectorAll(".tile").forEach(b=>b.setAttribute("aria-pressed",b.dataset.type===placing?"true":"false"));render()}
+function buildChips(){const box=$("pipeChips");box.innerHTML="";Object.entries(PIPES).forEach(([k,v])=>{const b=document.createElement("button");b.className="pipe-chip";b.dataset.k=k;b.innerHTML=`<i style="background:${v.c}"></i>${v.n}`;
+  b.onclick=()=>{pipeKind=k;const p=sel&&st.pipes.find(q=>q.id===sel);if(p&&mode==="select"){push();p.kind=k;renderAll();chipState();return}setMode("pipe")};box.appendChild(b)});chipState()}
+function chipState(){document.querySelectorAll(".pipe-chip").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===pipeKind&&mode==="pipe"?"true":"false"))}
+const DEFAULT_HINT="Выберите узел слева и щёлкните по листу. Узлы перетаскиваются, подключённые трубы идут следом. Щёлкните по трубе: квадратики двигают изгибы, полоски на участках сдвигают участок. Двойной щелчок по участку добавляет изгиб, по квадратику — убирает.";
+function hint(t){$("hint").textContent=t||DEFAULT_HINT}
+function setMode(m,keepPlacing){mode=m;if(!keepPlacing){placing=null;document.querySelectorAll(".tile").forEach(b=>b.setAttribute("aria-pressed","false"))}if(m!=="pipe")finishDraft(true);
+  $("mSelect").setAttribute("aria-pressed",m==="select");$("mPipe").setAttribute("aria-pressed",m==="pipe");chipState();
+  if(m==="pipe"){sel=null;hint("Режим трубы. Белые кружки — патрубки узлов. Щёлкните по патрубку и по второму патрубку: труба проложится сама. Можно ставить изгибы щелчками по листу. Двойной щелчок или Enter — закончить.")}else if(!placing)hint(null);
+  renderAll()}
+function finishDraft(silent,endAtt){if(!draft)return;let pts;
+  if(endAtt&&draft.pts.length===1&&draft.a){const A=attPos(draft.a),Z=attPos(endAtt);pts=route(A.pos,A.d,Z.pos,Z.d)}
+  else{pts=draft.pts.slice();if(endAtt){const Z=attPos(endAtt).pos;const L=pts[pts.length-1];pts.push([Z[0],L[1]],Z)}pts=clean(pts)}
+  const auto=!!(endAtt&&draft.pts.length===1&&draft.a);
+  if(pts.length>=2){push();const p={id:uid(),kind:pipeKind,pts,a:draft.a||null,b:endAtt||null,auto};st.pipes.push(p)}
+  draft=null;cursor=null;$("finishPipe").hidden=true;renderAll()}
+
+/* ---------- указатель ---------- */
+function pt(e){const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;const r=p.matrixTransform(svg.getScreenCTM().inverse());return[r.x,r.y]}
+function nearestPort(x,y,excludeItem){let best=null,bd=PORT_R;st.items.forEach(o=>{if(o.id===excludeItem)return;(DEFS[o.type]?.ports||[]).forEach(p=>{const pa=portAbs(o,p.id);const d=Math.hypot(pa.pos[0]-x,pa.pos[1]-y);if(d<bd){bd=d;best={item:o.id,port:p.id}}})});return best}
+let drag=null;
+svg.addEventListener("pointerdown",e=>{
+  const[x,y]=pt(e);
+  if(placing){const D=DEFS[placing];push();const n=D.nonum?0:nextNum();const o={id:uid(),type:placing,x:snap(x-D.w/2),y:snap(y-D.h/2),rot:0,n,label:placing==="value"?"1,5 бар":D.n,note:""};st.items.push(o);sel=o.id;if(!e.shiftKey){placing=null;updateLibPressed();hint(null)}renderAll();return}
+  if(mode==="pipe"){const hp=nearestPort(x,y);
+    if(!draft){if(hp){draft={pts:[attPos(hp).pos],a:hp}}else draft={pts:[[snap(x),snap(y)]],a:null};$("finishPipe").hidden=false;render();return}
+    if(hp){finishDraft(false,hp);return}
+    const P=[snap(x),snap(y)];const L=draft.pts[draft.pts.length-1];draft.pts.push([P[0],L[1]],P);render();return}
+  const p0=sel&&st.pipes.find(q=>q.id===sel);
+  const vh=e.target.closest(".vh"),sh=e.target.closest(".sh");
+  if(p0&&(vh||sh)){drag={pipe:p0,orig:p0.pts.map(q=>q.slice()),vi:vh?+vh.dataset.i:null,sk:sh?+sh.dataset.k:null,moved:false,start:[x,y]};svg.setPointerCapture(e.pointerId);e.preventDefault();return}
+  const g=e.target.closest(".it,.pp");
+  if(!g){sel=null;renderAll();return}
+  if(g.classList.contains("pp")){sel=g.dataset.pid;renderAll();return}
+  const o=itemById(g.dataset.id);if(!o)return;sel=o.id;
+  drag={o,dx:x-o.x,dy:y-o.y,moved:false};svg.setPointerCapture(e.pointerId);e.preventDefault();render();renderInsp()});
+
+function dragVertex(orig,i,P){const pts=orig.map(q=>q.slice()),last=pts.length-1,old=pts[i];
+  if(i===0||i===last){const j=i===0?1:last-1;if(pts.length>2){const N=pts[j];if(N[0]===old[0]&&N[1]!==old[1])N[0]=P[0];else N[1]=P[1]}pts[i]=P;return i===0?ortho(pts.reverse()).reverse():ortho(pts)}
+  const ins=[];
+  [i-1,i+1].forEach(j=>{const N=pts[j];const wasH=N[1]===old[1];const isEnd=j===0||j===last;
+    if(isEnd)ins.push({j,c:wasH?[P[0],N[1]]:[N[0],P[1]]});else{if(wasH)N[1]=P[1];else N[0]=P[0]}});
+  pts[i]=P;
+  ins.sort((a,b)=>b.j-a.j).forEach(({j,c})=>{if(same(c,P)||same(c,pts[j]))return;pts.splice(j>i?i+1:i,0,c)});
+  return pts}
+function dragSeg(orig,k,P){let pts=orig.map(q=>q.slice());const h=pts[k][1]===pts[k+1][1];let i=k,j=k+1;
+  if(i===0){pts.splice(1,0,pts[0].slice());i=1;j=2}
+  if(j===pts.length-1){pts.splice(j,0,pts[j].slice())}
+  if(h){pts[i][1]=P[1];pts[j][1]=P[1]}else{pts[i][0]=P[0];pts[j][0]=P[0]}return pts}
+
+svg.addEventListener("pointermove",e=>{
+  const[x,y]=pt(e);
+  if(mode==="pipe"){const hp=nearestPort(x,y);const ch=JSON.stringify(hp)!==JSON.stringify(hoverPort);hoverPort=hp;if(draft){cursor=[snap(x),snap(y)];render()}else if(ch)render();return}
+  if(!drag)return;
+  if(drag.pipe){const P=[snap(x),snap(y)];if(!drag.moved){if(Math.hypot(x-drag.start[0],y-drag.start[1])<3)return;push();drag.moved=true}
+    const p=drag.pipe,last=drag.orig.length-1;
+    if(drag.vi!==null){p.pts=dragVertex(drag.orig,drag.vi,P);if(drag.vi===0)p.a=null;if(drag.vi===last)p.b=null;
+      if(drag.vi===0||drag.vi===last){hoverPort=nearestPort(x,y)}}
+    else p.pts=dragSeg(drag.orig,drag.sk,P);
+    p.auto=false;render();return}
+  const nx=snap(x-drag.dx),ny=snap(y-drag.dy);
+  if(nx!==drag.o.x||ny!==drag.o.y){if(!drag.moved){push();drag.moved=true}drag.o.x=Math.max(0,Math.min(DRAW_R-20,nx));drag.o.y=Math.max(0,Math.min(H-30,ny));updateAttached(drag.o);render()}});
+svg.addEventListener("pointerup",()=>{if(!drag)return;
+  if(drag.pipe&&drag.moved){const p=drag.pipe,last=drag.orig.length-1;
+    if((drag.vi===0||drag.vi===last)&&hoverPort){const end=drag.vi===0?"a":"b";const pa=attPos(hoverPort);moveEnd(p,end,pa.pos);p[end]=hoverPort}
+    p.pts=clean(p.pts);hoverPort=null}
+  drag=null;renderAll()});
+svg.addEventListener("pointercancel",()=>{drag=null});
+svg.addEventListener("dblclick",e=>{
+  if(mode==="pipe"){e.preventDefault();finishDraft();return}
+  const p=sel&&st.pipes.find(q=>q.id===sel);if(!p)return;const[x,y]=pt(e);
+  const vh=e.target.closest(".vh");
+  if(vh){const i=+vh.dataset.i;if(i===0||i===p.pts.length-1)return;push();const pts=p.pts.slice();pts.splice(i,1);p.pts=clean(ortho(pts));p.auto=false;renderAll();return}
+  // добавить изгиб: делим участок на три части
+  let best=-1,bd=12;for(let k=0;k<p.pts.length-1;k++){const a=p.pts[k],b=p.pts[k+1];const h=a[1]===b[1];const lo=h?Math.min(a[0],b[0]):Math.min(a[1],b[1]),hi=h?Math.max(a[0],b[0]):Math.max(a[1],b[1]);const along=h?x:y,off=h?Math.abs(y-a[1]):Math.abs(x-a[0]);if(along>=lo&&along<=hi&&off<bd){bd=off;best=k}}
+  if(best<0)return;push();const a=p.pts[best],b=p.pts[best+1];const h=a[1]===b[1];const len=h?b[0]-a[0]:b[1]-a[1];
+  const c1=h?[snap(a[0]+len/3),a[1]]:[a[0],snap(a[1]+len/3)],c2=h?[snap(a[0]+2*len/3),a[1]]:[a[0],snap(a[1]+2*len/3)];
+  p.pts.splice(best+1,0,c1,c2);p.auto=false;render();toast("Добавлены две точки изгиба: потяните средний участок")});
+$("finishPipe").onclick=()=>finishDraft();
+
+document.addEventListener("keydown",e=>{
+  const tag=(e.target.tagName||"").toLowerCase();if(tag==="input"||tag==="textarea"||tag==="select")return;
+  if(!$("modal").hidden){if(e.key==="Escape")closeModal();return}
+  const o=sel&&itemById(sel);
+  if(e.key==="Escape"){if(draft){draft=null;cursor=null;$("finishPipe").hidden=true;render()}else if(placing){placing=null;updateLibPressed();hint(null)}else if(mode==="pipe")setMode("select");else{sel=null;renderAll()}}
+  else if(e.key==="Enter"&&draft)finishDraft();
+  else if((e.key==="Delete"||e.key==="Backspace")&&sel){delSel();e.preventDefault()}
+  else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="z"){doUndo();e.preventDefault()}
+  else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="d"&&o){dupSel();e.preventDefault()}
+  else if(e.key.toLowerCase()==="r"&&!e.ctrlKey&&!e.metaKey&&o)rotSel();
+  else if(o&&e.key.startsWith("Arrow")){const d={ArrowLeft:[-G,0],ArrowRight:[G,0],ArrowUp:[0,-G],ArrowDown:[0,G]}[e.key];push();o.x+=d[0];o.y+=d[1];updateAttached(o);renderAll();e.preventDefault()}});
+
+function nextNum(){return st.items.reduce((m,o)=>Math.max(m,o.n||0),0)+1}
+function delSel(){if(!sel)return;push();st.items=st.items.filter(o=>o.id!==sel);st.pipes=st.pipes.filter(p=>p.id!==sel);st.pipes.forEach(p=>{if(p.a&&p.a.item===sel)p.a=null;if(p.b&&p.b.item===sel)p.b=null});sel=null;renderAll()}
+function rotSel(){const o=itemById(sel);if(!o||DEFS[o.type].nonum)return;push();o.rot=((o.rot||0)+90)%360;updateAttached(o);renderAll()}
+function dupSel(){const o=itemById(sel);if(!o)return;push();const c={...o,id:uid(),x:o.x+20,y:o.y+20,n:DEFS[o.type].nonum?0:nextNum()};st.items.push(c);sel=c.id;renderAll()}
+function doUndo(){const s=undoStack.pop();if(!s){toast("Отменять больше нечего");return}st=JSON.parse(s);sel=null;draft=null;renderAll()}
+
+/* ---------- свойства ---------- */
+function renderInsp(){const b=$("inspBody");const o=itemById(sel),p=st.pipes.find(q=>q.id===sel);
+  if(o){const D=DEFS[o.type];const conn=st.pipes.filter(q=>(q.a&&q.a.item===o.id)||(q.b&&q.b.item===o.id)).length;
+   b.innerHTML=`<p style="margin:0 0 8px;color:var(--muted)">${D.n}${D.ports.length?` · патрубков: ${D.ports.length}, подключено: ${conn}`:""}</p>
+   ${D.nonum?"":`<div class="field"><label for="iN">Номер наклейки</label><input id="iN" type="number" min="1" max="99" value="${o.n}"></div>`}
+   <div class="field"><label for="iL">${o.type==="text"?"Текст подписи":o.type==="value"?"Показание (например, 1,5 бар или 60 °C)":"Название на схеме"}</label><input id="iL" value="${esc(o.label)}"></div>
+   ${D.nonum?"":`<div class="field"><label for="iNote">Модель, примечание</label><input id="iNote" value="${esc(o.note)}" placeholder="например, Baxi ECO Nova 24F"></div>`}
+   <div class="row">${D.nonum?"":`<button class="btn" id="iRot">Повернуть (R)</button>`}<button class="btn" id="iDup">Копия</button><button class="btn warn" id="iDel">Удалить</button></div>`;
+   const bind=(id,f)=>{const el=$(id);if(!el)return;el.addEventListener("focus",()=>push(),{once:true});el.oninput=()=>{f(el.value);render();renderSpec();save()}};
+   bind("iN",v=>o.n=Math.max(1,parseInt(v)||1));bind("iL",v=>o.label=v);bind("iNote",v=>o.note=v);
+   $("iRot")&&($("iRot").onclick=rotSel);$("iDel").onclick=delSel;$("iDup").onclick=dupSel;
+  }else if(p){const nm=e=>{const it=e&&itemById(e.item);return it?(DEFS[it.type].nonum?it.label:`№${it.n} ${it.label}`):"свободный конец"};
+   b.innerHTML=`<div class="field"><label for="iK">Тип трубы</label><select id="iK">${Object.entries(PIPES).map(([k,v])=>`<option value="${k}"${k===p.kind?" selected":""}>${v.n}</option>`).join("")}</select></div>
+   <p style="margin:0 0 8px;font-size:13px">Откуда: <b>${esc(nm(p.a))}</b><br>Куда: <b>${esc(nm(p.b))}</b><br><span style="color:var(--muted)">Изгибов: ${Math.max(0,p.pts.length-2)}</span></p>
+   <div class="row"><button class="btn" id="iAuto"${p.a&&p.b?"":" disabled title=\"Нужно, чтобы оба конца были подключены к узлам\""}>Проложить заново</button><button class="btn" id="iRev">Развернуть стрелки</button><button class="btn warn" id="iDel">Удалить</button></div>
+   <p class="empty" style="margin-top:8px">Тяните квадратики, чтобы двигать изгибы, и полоски, чтобы сдвигать участки. Конец трубы можно перетащить на другой патрубок.</p>`;
+   $("iK").onchange=e=>{push();p.kind=e.target.value;renderAll()};
+   $("iRev").onclick=()=>{push();p.pts.reverse();[p.a,p.b]=[p.b,p.a];renderAll()};$("iDel").onclick=delSel;
+   $("iAuto").onclick=()=>{const A=attPos(p.a),Z=attPos(p.b);if(!A||!Z)return;push();p.pts=route(A.pos,A.d,Z.pos,Z.d);p.auto=true;renderAll()};
+  }else b.innerHTML=`<p class="empty">Щёлкните по узлу или трубе на листе, чтобы изменить номер, название, модель или ход трубы.</p><p class="empty">Клавиши: Delete — удалить, R — повернуть, стрелки — сдвинуть, Ctrl+D — копия, Ctrl+Z — отменить, Shift+щелчок — поставить несколько одинаковых узлов.</p>`}
+function renderSpec(){const tb=$("spec");const list=st.items.filter(o=>!DEFS[o.type]?.nonum).sort((a,b)=>a.n-b.n);
+  if(!list.length){tb.innerHTML=`<tr><td colspan="2" class="empty">Пока пусто. Добавьте узлы на лист или выберите шаблон.</td></tr>`;return}
+  const dup=new Set(list.map(o=>o.n).filter((n,i,a)=>a.indexOf(n)!==i));
+  tb.innerHTML=list.map(o=>`<tr><td><span class="num" ${dup.has(o.n)?'style="background:#F19A90" title="Номер повторяется"':""}>${o.n}</span></td><td><input data-id="${o.id}" data-f="label" value="${esc(o.label)}" aria-label="Название №${o.n}"><input class="sm" data-id="${o.id}" data-f="note" value="${esc(o.note)}" placeholder="модель…" aria-label="Модель №${o.n}"></td></tr>`).join("");
+  tb.querySelectorAll("input").forEach(el=>{el.addEventListener("focus",()=>push(),{once:true});el.oninput=()=>{const o=itemById(el.dataset.id);o[el.dataset.f]=el.value;render();save();if(sel===o.id){const i=$(el.dataset.f==="label"?"iL":"iNote");if(i)i.value=el.value}}})}
+function renderMeta(){const m=st.meta||(st.meta={});[["mObj","obj"],["mAddr","addr"],["mInst","inst"],["mPhone","phone"],["mDate","date"]].forEach(([id,k])=>{const el=$(id);if(document.activeElement!==el)el.value=m[k]||"";el.oninput=()=>{m[k]=el.value;render();save()}})}
+
+/* ---------- кнопки ---------- */
+$("mSelect").onclick=()=>setMode("select");$("mPipe").onclick=()=>setMode("pipe");
+$("undo").onclick=doUndo;
+$("flowBtn").setAttribute("aria-pressed",flow);
+$("flowBtn").onclick=()=>{flow=!flow;$("flowBtn").setAttribute("aria-pressed",flow);try{localStorage.setItem(KEY+"-flow",flow?"1":"0")}catch(e){}render()};
+$("renum").onclick=()=>{push();const list=st.items.filter(o=>!DEFS[o.type]?.nonum).sort((a,b)=>(a.y-b.y)||(a.x-b.x));list.forEach((o,i)=>o.n=i+1);renderAll();toast("Номера расставлены сверху вниз, слева направо")};
+let clearArm=0;$("clear").onclick=()=>{const b=$("clear");if(Date.now()-clearArm<3000){push();st=EMPTY();sel=null;renderAll();b.textContent="Очистить лист";clearArm=0;toast("Лист очищен. «Отменить» вернёт схему.")}else{clearArm=Date.now();b.textContent="Нажмите ещё раз";setTimeout(()=>{b.textContent="Очистить лист"},3000)}};
+$("zIn").onclick=()=>{zoom=Math.min(2,+(zoom+.1).toFixed(2));render()};
+$("zOut").onclick=()=>{zoom=Math.max(.25,+(zoom-.1).toFixed(2));render()};
+$("zFit").onclick=fit;
+function fit(){const w=$("wrap").clientWidth-2;zoom=Math.max(.25,Math.min(1.2,w/W));render()}
+
+function openModal(html){$("modalBox").innerHTML=html;$("modal").hidden=false;const c=$("mClose");if(c)c.onclick=closeModal}
+function closeModal(){$("modal").hidden=true}
+$("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});
+function toast(t){const d=document.createElement("div");d.className="toast";d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2600)}
+
+$("tplBtn").onclick=()=>{
+  const cards=TPL.map((t,i)=>{const s=t.build();return `<button class="tpl" data-t="${t.id}"><svg viewBox="10 10 ${DRAW_R-10} ${H-20}" xmlns="http://www.w3.org/2000/svg">${sheetSVG(s,{thumb:true})}</svg><b>${i+1}. ${esc(t.name)}</b><span>${esc(t.desc)}</span></button>`}).join("");
+  openModal(`<h2 style="font-size:17px">Шаблоны котельных</h2><p style="margin:0;color:var(--muted)">Выберите похожую котельную и доработайте её под объект. Текущая схема заменится, вернуть её можно кнопкой «Отменить».</p><div class="tpl-grid">${cards}<button class="tpl" data-t="empty"><svg viewBox="0 0 1070 970"><rect width="1070" height="970" fill="#fff"/><text x="535" y="500" font-size="60" text-anchor="middle" fill="#9AA8B0" font-family="Arial">Пустой лист</text></svg><b>Пустой лист</b><span>Начать схему с нуля.</span></button></div><div class="row"><button class="btn" id="mClose">Закрыть</button></div>`);
+  document.querySelectorAll(".tpl").forEach(b=>b.onclick=()=>{push();st=b.dataset.t==="empty"?EMPTY():getTpl(b.dataset.t);sel=null;draft=null;closeModal();renderAll();toast("Шаблон загружен. «Отменить» вернёт прежнюю схему.")})};
+
+$("pngBtn").onclick=()=>{
+  const src=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${sheetSVG(st,{export:true})}</svg>`;
+  const img=new Image();const url=URL.createObjectURL(new Blob([src],{type:"image/svg+xml"}));
+  img.onload=()=>{const c=document.createElement("canvas");c.width=W*2;c.height=H*2;const x=c.getContext("2d");x.scale(2,2);x.drawImage(img,0,0);URL.revokeObjectURL(url);
+    let data;try{data=c.toDataURL("image/png")}catch(e){data=null}
+    openModal(`<h2 style="font-size:17px">Картинка схемы готова</h2><p style="margin:0;color:var(--muted)">На телефоне: нажмите на картинку и удерживайте, затем «Сохранить изображение». На компьютере: правая кнопка мыши → «Сохранить картинку как…». Её можно распечатать и вклеить в паспорт котельной или отправить клиенту.</p>${data?`<img src="${data}" alt="Схема котельной">`:`<p>Не получилось собрать картинку в этом браузере. Попробуйте другой браузер.</p>`}<div class="row">${data&&!inFrame?`<a class="btn primary" download="skhema-kotelnoy.png" href="${data}">Скачать PNG</a>`:""}<button class="btn${data&&!inFrame?"":" primary"}" id="mClose">Закрыть</button></div>`)};
+  img.onerror=()=>toast("Не получилось собрать картинку");img.src=url};
+
+$("codeBtn").onclick=()=>{
+  openModal(`<h2 style="font-size:17px">Код схемы</h2><p style="margin:0;color:var(--muted)">Схема хранится в этом браузере. Чтобы перенести её на другое устройство или сохранить копию, скопируйте код и отправьте себе, например в мессенджер. Чтобы открыть схему, вставьте код в поле и нажмите «Загрузить».</p><textarea id="codeTa" aria-label="Код схемы">${esc(JSON.stringify(st))}</textarea><div class="row"><button class="btn primary" id="cCopy">Скопировать</button><button class="btn" id="cLoad">Загрузить из поля</button><button class="btn" id="mClose">Закрыть</button></div><p id="cMsg" class="hint" style="margin:0"></p>`);
+  $("cCopy").onclick=()=>{const ta=$("codeTa");const fb=()=>{ta.select();$("cMsg").textContent="Код выделен. Скопируйте его вручную (Ctrl+C или «Копировать»)."};try{navigator.clipboard.writeText(ta.value).then(()=>{$("cMsg").textContent="Скопировано"},fb)}catch(e){fb()}};
+  $("cLoad").onclick=()=>{try{const o=JSON.parse($("codeTa").value);if(!o.items||!o.pipes)throw 0;o.pipes.forEach(p=>{if(!("a" in p))p.a=null;if(!("b" in p))p.b=null});push();st=o;sel=null;renderAll();closeModal();toast("Схема загружена")}catch(e){$("cMsg").textContent="В поле не код схемы. Вставьте код целиком, от первой { до последней }."}}};
+
+buildLib();buildChips();hint(null);renderAll();
+requestAnimationFrame(()=>{if($("wrap").clientWidth<W)fit()});
+window.__k={TPL,st:()=>st,getTpl,route,portAbs};
+})();
+</script>
+
+</body>
+</html>
